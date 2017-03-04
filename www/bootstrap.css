@@ -4,4 +4,6 @@ body {
   background-repeat: no-repeat;
   background-size: 100% 510px;
   margin-top: 12%;
+  background-size: cover;
+  -moz-background-size: cover;
 }
