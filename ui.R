@@ -50,7 +50,10 @@ shinyUI(
                               plotlyOutput("plot.trend")),
                      tabPanel("Section Trend Line",
                               br(),
-                              plotlyOutput("plot.trendline")))
+                              plotlyOutput("plot.trendline")),
+                     tabPanel("Top 10 most-talked about",
+                              br(),
+                              plotlyOutput("plot.values")))
           )
         )
       )

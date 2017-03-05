@@ -5,6 +5,9 @@ library("dplyr")
 library("stringr")
 library("DT")
 library("plotrix")
+library("tidyr")
+library("ggplot2")
+library("plotly")
 
 shinyServer(
   function(input, output) {
@@ -43,6 +46,34 @@ shinyServer(
       news.data.table$`Publication Date` <- str_sub(news.data.table$`Publication Date`, 1, 10)
       news.data.table$Day <- str_sub(news.data.table$`Publication Date`, 9, 10)
       return(news.data.table)
+    }
+    
+    get.values.data <- function() {
+      
+      parameters <- input.data()
+      data <- as.data.frame(get.uri.data(parameters[1], parameters[2]))
+      news.data.table <-  data %>% 
+        select(response.docs.keywords)
+      
+      GetValues <- function(index) {
+        keywords <- as.data.frame(news.data.table[[1]][index])
+        return(keywords$value)
+      }
+      
+      values <- GetValues(1)
+      
+      for (index in 2:nrow(news.data.table)) {
+        values <- c(values, GetValues(index))
+      }
+      values <- as.data.frame(as.list(values))
+      cols <- ncol(values)
+      values <- gather(values, "Key", "Values", 1:cols) %>% select(Values)
+      values <- as.data.frame(table(values$Values))
+      colnames(values) <- c("Values", "Frequency")
+      
+      values <- arrange(values, -Frequency)
+      values <- values[1:10, ]
+      return (values)
     }
    
      output$table <- renderDataTable({
@@ -171,6 +202,24 @@ shinyServer(
          layout(title = paste0("Monthwise Trend of ", parameters[4]),
                 xaxis = list(title = "Day of Month"), 
                 yaxis = list(title = "Number of Articles"))
+     })
+     
+     output$plot.values <- renderPlotly ({
+       values <- get.values.data()
+       JitCoOr <- jitter(as.numeric(factor(values$Values)))
+       JitCoOr2 <- jitter(as.numeric(factor(values$Frequency)))
+       
+       plot <- ggplot(data, aes(x = Frequency, y = Values)) +
+         geom_point(data = values, aes(x = JitCoOr2, y = JitCoOr, size = Frequency, color = Values), alpha = .5) +
+         geom_text(data = values, aes(x = JitCoOr2, y = JitCoOr, label = Values)) +
+         scale_size(range = c(5, 20)) +
+         scale_x_discrete(breaks = 1:7, labels = c("Low", " ", " ", "Medium", " ", " ", "High"), limits = 1:7) +
+         scale_y_discrete(breaks = 1:10 , labels = as.vector(arrange(values, JitCoOr)[, 1]), limits = 1:10) + 
+         theme_bw() +
+         labs(title = "Top 10 most-discussed about topics in New York Times", x = "Distribution according to recurrence",
+              y = "Topics of Interest", color = "", size = "")
+       
+       ggplotly(plot) %>% layout(plot, showlegend = FALSE)
      })
 })
 
