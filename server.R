@@ -142,7 +142,7 @@ shinyServer(
        return(plot)
      })
      
-     output$plot3 <- renderPlot({
+     output$plot3 <- renderPlotly({
        
        parameters <- input.data()
        data.plot <- get.news.data()
@@ -152,10 +152,14 @@ shinyServer(
                                Count = n()) %>% 
          arrange(-Count)
        
-       top.10 <- data.plot2[1:10, ]
-       plot <- pie3D(top.10$Count,labels = top.10$Section ,explode=0.2,
-             main="Daily top 10")
-       return(plot)
+       top.10 <- data.plot2[1:10, ] %>% 
+       plot_ly(labels = ~Section, values = ~Count) %>% 
+         add_pie(hole = 0.5) %>% 
+         layout(title = "TOP 10 SECTIONS, DAILY BASIS",  showlegend = F,
+                xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+                yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+       top.10
+       
      })
      
      output$plot.trend <- renderPlotly({

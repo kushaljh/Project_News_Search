@@ -44,7 +44,7 @@ shinyUI(
                               plotlyOutput("plot2")),
                      tabPanel("Top 10 Daily",
                               br(),
-                              plotOutput("plot3")), 
+                              plotlyOutput("plot3")), 
                      tabPanel("Section Trend",
                               br(),
                               plotlyOutput("plot.trend")),
