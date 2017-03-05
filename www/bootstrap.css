@@ -8,6 +8,10 @@ body {
   font-family: "Century";
 }
 
+table {
+  background: #DAA520;
+  opacity:0.6;
+}
 
 h3 {
   font-family: "Matura MT Script Capitals";
