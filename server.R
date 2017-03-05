@@ -1,8 +1,10 @@
+#install.packages("DT")
 library("shiny")
 library("httr")
 library("jsonlite")
 library("dplyr")
 library("stringr")
+
 library("DT")
 library("plotrix")
 

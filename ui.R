@@ -1,3 +1,5 @@
+#install.packages("plotrix")
+#install.packages("plotly")
 library("shiny")
 library("plotly")
 library("plotrix")

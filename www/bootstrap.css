@@ -1,9 +1,24 @@
 body {
-  background-color: transparent;
-  background-image: url("img.jpg");
-  background-repeat: no-repeat;
-  background-size: 100% 510px;
-  margin-top: 12%;
-  background-size: cover;
+
+  background: url("img.jpeg") no-repeat center center fixed; 
+  -webkit-background-size: cover;
   -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  font-family: "Century";
+}
+
+
+h3 {
+  font-family: "Matura MT Script Capitals";
+}
+
+.well:hover {
+  opacity: 1;
+  transition-delay: 0;
+}
+
+.well {
+  opacity: 0.5;
+  transition-delay: 0;
 }
