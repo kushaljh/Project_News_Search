@@ -1,6 +1,7 @@
 library("shiny")
 library("plotly")
 library("plotrix")
+library("DT")
 
 shinyUI(
   fluidPage(
@@ -37,7 +38,7 @@ shinyUI(
           tabPanel("TABLE", 
                    h3("Articles"),
                    br(),
-                   dataTableOutput("table")),
+                   DT :: dataTableOutput("table")),
           
           tabPanel("Visualization",
                    tabsetPanel(
