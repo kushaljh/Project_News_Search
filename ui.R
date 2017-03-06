@@ -21,10 +21,15 @@ shinyUI(
         selectInput("day", label = h3("Select Day"), 
                     choices = sprintf("%02d", c(seq(01,31, by = 1))), selected = 1),
         
-        selectInput("section", label = h3("Select Section"), 
-                    choices = as.list("World", "U.S.", "Politics", "Business", "Opinion",
+        selectInput("section.1", label = h3("Select Section"), 
+                    choices = as.list(c("World", "U.S.", "Politics", "Business", "Opinion",
                                       "Tech", "Science", "Health", "Sports", "Arts",
-                                      "Style", "Food", "Travel"), selected = 3)
+                                      "Style", "Food", "Travel")), selected = "World"), 
+        
+        selectInput("section.2", label = h3("Select Section"), 
+                    choices = as.list(c("World", "U.S.", "Politics", "Business", "Opinion",
+                                      "Tech", "Science", "Health", "Sports", "Arts",
+                                      "Style", "Food", "Travel")), selected = "U.S.")
       ),
       
       mainPanel(
@@ -48,7 +53,7 @@ shinyUI(
                      tabPanel("Section Trend",
                               br(),
                               plotlyOutput("plot.trend")),
-                     tabPanel("Section Trend Line",
+                     tabPanel("Section Comparison Chart",
                               br(),
                               plotlyOutput("plot.trendline")),
                      tabPanel("Top 10 most-talked about",

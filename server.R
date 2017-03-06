@@ -20,8 +20,9 @@ shinyServer(
       year.in <- input$year
       month.in <- input$month
       day.in <- input$day
-      section.in <- input$section
-      return(c(year.in, month.in, day.in, section.in))
+      section1.in <- input$section.1
+      section2.in <- input$section.2
+      return(c(year.in, month.in, day.in, section1.in, section2.in))
     })
 
     get.uri.data <- function(year, month) {
@@ -81,7 +82,7 @@ shinyServer(
       parameters <- input.data()
       table.final <- get.news.data()
       table.final <- filter(table.final, table.final$Day == parameters[3]) %>% select(-`Day`)
-      table.final <- datatable(table.final, escape = FALSE, class = "hover")#, style = "bootstrap"
+      table.final <- datatable(table.final, escape = FALSE, class = "hover")
       return(table.final)
       
     })
@@ -195,15 +196,26 @@ shinyServer(
        parameters <- input.data()
        news.data <- get.uri.data(parameters[1], parameters[2])
        
-       plot.data <- get.news.data() %>%
-         select(`Section`, `Day`) %>%
-         filter(Section == parameters[4]) %>%
-         group_by(Day) %>%
-         summarize(`No of Articles` = n())
+       GetData <- function(index) {
+         plot.data <- get.news.data() %>%
+           select(`Section`, `Day`) %>%
+           filter(Section == parameters[index]) %>%
+           group_by(Day) %>%
+           summarize(`No of Articles` = n())
+         colnames(plot.data)[2] <- parameters[index]
+         return(plot.data)
+       }
        
-       plot_ly(plot.data, x = ~plot.data$Day, y = ~plot.data$`No of Articles`,
-               type = 'scatter', mode = 'lines') %>% 
-         layout(title = paste0("Monthwise Trend of ", parameters[4]),
+       plot.data.1 <- GetData(4)
+       plot.data.2 <- GetData(5)
+       plot.final <- full_join(plot.data.1, plot.data.2)
+       
+       traces <- parameters[4:5]
+       
+       plot_ly(plot.final, x = ~plot.final[[1]], y = ~plot.final[[2]],
+               type = 'scatter', mode = 'lines', name = traces[1]) %>% 
+         add_trace(x = ~plot.final[[1]], y = ~plot.final[[3]], name = traces[2]) %>% 
+         layout(title = paste("Popularity of", traces[1], "vs", traces[2]),
                 xaxis = list(title = "Day of Month"), 
                 yaxis = list(title = "Number of Articles"))
      })
