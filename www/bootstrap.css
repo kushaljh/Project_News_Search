@@ -1,16 +1,18 @@
 body {
 
-  background: url("img.jpeg") no-repeat center center fixed; 
+  background: url("imgpaper.jpg") no-repeat center center fixed; 
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
   font-family: "Century";
+  opacity: 1;
 }
+
+
 
 table {
   background: #DAA520;
-  opacity:0.6;
 }
 
 h3 {
@@ -18,11 +20,11 @@ h3 {
 }
 
 .well:hover {
-  opacity: 1;
+  opacity: 1.5;
   transition-delay: 0;
 }
 
 .well {
-  opacity: 0.5;
+  opacity: 2;
   transition-delay: 0;
 }
