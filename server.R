@@ -79,7 +79,7 @@ shinyServer(
         return(keywords$value)
       }
       
-      values <- GetValues()
+      values <- GetValues(1)
       
       for (index in 2:nrow(news.data.table)) {
         values <- c(values, GetValues(index))
@@ -243,7 +243,7 @@ shinyServer(
         labs(title = "Top 10 most-discussed about topics in New York Times", x = "Distribution according to recurrence",
              y = "Topics of Interest", color = "", size = "")
       
-      ggplotly(plot) %>% layout(plot, showlegend = FALSE)
+      ggplotly(plot) %>% layout(plot, showlegend = FALSE, hovermode = FALSE)
     })
   })
 
