@@ -259,7 +259,6 @@ shinyServer(
       
       plot <- ggplot(data, aes(x = Frequency, y = Values)) +
         geom_point(data = values, aes(x = JitCoOr2, y = JitCoOr, size = Frequency, color = Values), alpha = .5) +
-        geom_text(data = values, aes(x = JitCoOr2, y = JitCoOr, label = Values)) +
         scale_size(range = c(5, 20)) +
         scale_x_discrete(breaks = 1:7, labels = c("Low", " ", " ", "Medium", " ", " ", "High"), limits = 1:7) +
         scale_y_discrete(breaks = 1:10 , labels = as.vector(arrange(values, JitCoOr)[, 1]), limits = 1:10) + 
