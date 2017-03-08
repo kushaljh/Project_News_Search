@@ -29,6 +29,24 @@ shinyServer(
       return(c(year.viz, month.viz, day.viz, section.viz))
     })
     
+    data.viz <- reactive({
+      parameters <- input.viz()
+      news.data <- get.uri.data(parameters[1], parameters[2])
+      news.data.response <- news.data$response
+      news.data.response.docs <- news.data.response$docs
+      news.data.response.docs.headline <- news.data.response.docs$headline
+      news.data.response.docs.keywords <- news.data.response.docs$keywords
+      
+      news.data.table <- data.frame(news.data.response.docs$pub_date,
+                                    news.data.response.docs.headline$main, news.data.response.docs$section_name)
+      colnames(news.data.table) <- c("Publication Date", "Headline", "Section")
+      news.data.table$Headline <- paste0("<a href='",news.data.response.docs$web_url,"'>",news.data.table$Headline,"</a>")
+      news.data.table$Section <- str_replace_na(news.data.table$Section, replacement = "Section not defined")
+      news.data.table$`Publication Date` <- str_sub(news.data.table$`Publication Date`, 1, 10)
+      news.data.table$Day <- str_sub(news.data.table$`Publication Date`, 9, 10)
+      return(news.data.table)
+    })
+    
     input.pop <- reactive({
       year.pop <- input$year.pop
       month.pop<- input$month.pop
@@ -108,8 +126,7 @@ shinyServer(
     
     output$plot1 <- renderPlotly({
       
-      parameters <- input.viz()
-      data.plot <- get.news.data(parameters[1], parameters[2])
+      data.plot <- data.viz()
       data.plot <- group_by(data.plot, Section)
       data.plot2 <- summarise(data.plot, 
                               Count = n()) %>% 
@@ -128,14 +145,15 @@ shinyServer(
           panel.grid.minor = element_blank(), 
           panel.grid.major = element_blank())
       
-      plot <- ggplotly(plot)
-      return(plot)
+      plot <- ggplotly(plot) %>% 
+        layout(autosize = F, width = 900, height = 500)
+      plot
     })
     
     output$plot2 <- renderPlotly({
       
       parameters <- input.viz()
-      data.plot <- get.news.data(parameters[1], parameters[2])
+      data.plot <- data.viz()
       data.plot <- filter(data.plot, data.plot$Day == parameters[3]) %>% 
         group_by(Section)
       data.plot2 <- summarise(data.plot, 
@@ -155,14 +173,16 @@ shinyServer(
           panel.grid.minor = element_blank(), 
           panel.grid.major = element_blank())
       
-      plot <- ggplotly(plot)
-      return(plot)
+      plot <- ggplotly(plot) %>% 
+        layout(autosize = F, width = 900, height = 500)
+      
+      plot
     })
     
     output$plot3 <- renderPlotly({
       
       parameters <- input.viz()
-      data.plot <- get.news.data(parameters[1], parameters[2])
+      data.plot <- data.viz()
       data.plot <- filter(data.plot, data.plot$Day == parameters[3]) %>% 
         group_by(Section)
       data.plot2 <- summarise(data.plot, 
@@ -174,14 +194,15 @@ shinyServer(
         add_pie(hole = 0.5) %>% 
         layout(title = "TOP 10 SECTIONS, DAILY BASIS",  showlegend = F,
                xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
-               yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+               yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+               autosize = F, width = 900, heigth = 500)
       top.10
       
     })
     
     output$plot.trend <- renderPlotly({
       parameters <- input.viz()
-      plot.data <- get.news.data(parameters[1], parameters[2]) %>%
+      plot.data <- data.viz() %>% 
         select(`Section`, `Day`) %>%
         filter(Section == parameters[4]) %>%
         group_by(Day) %>%
@@ -198,7 +219,9 @@ shinyServer(
           axis.ticks = element_blank(),
           panel.grid.minor = element_blank(), 
           panel.grid.major = element_blank())
-      ggplotly(p)
+      p <- ggplotly(p) %>% 
+        layout(autosize = F, width = 900, height = 500)
+      p
     })
     
     output$plot.trendline <- renderPlotly({
@@ -225,7 +248,8 @@ shinyServer(
         add_trace(x = ~plot.final[[1]], y = ~plot.final[[3]], name = traces[2]) %>% 
         layout(title = paste("Popularity of", traces[1], "vs", traces[2]),
                xaxis = list(title = "Day of Month"), 
-               yaxis = list(title = "Number of Articles"))
+               yaxis = list(title = "Number of Articles"),
+               autosize = F, width = 900, height = 500)
     })
     
     output$plot.values <- renderPlotly ({
@@ -243,7 +267,9 @@ shinyServer(
         labs(title = "Top 10 most-discussed about topics in New York Times", x = "Distribution according to recurrence",
              y = "Topics of Interest", color = "", size = "")
       
-      ggplotly(plot) %>% layout(plot, showlegend = FALSE, hovermode = FALSE)
+      ggplotly(plot) %>% 
+        layout(plot, showlegend = FALSE, hovermode = FALSE,
+               autosize = F, width = 900, height = 500)
     })
   })
 

@@ -2,7 +2,7 @@ library("shiny")
 library("plotly")
 library("DT")
 shinyUI (
-  navbarPage("Hidden Transistor",
+  navbarPage("NewSearch",
              theme = "bootstrap.css",
              tabPanel("About" 
              ),
