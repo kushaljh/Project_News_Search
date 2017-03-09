@@ -8,7 +8,7 @@ shinyUI (
              tabPanel("Article Search",
                       sidebarLayout(
                         sidebarPanel(
-                          selectInput("year.article", label = h3("Select Year"), choices = as.list(seq(1852, 2017, by = 1)), selected = 2000),
+                          selectInput("year.article", label = h3("Select Year"), choices = as.list(seq(1852, 2017, by = 1)), selected = 2017),
                           selectInput("month.article", label = h3("Select Month"), 
                                       choices = list("January" = 1, "February" = 2, "March" = 3, "April" = 4, "May" = 5,
                                                      "June" = 6, "July" = 7, "August" = 8, "September" = 9, "October" = 10,
@@ -26,7 +26,7 @@ shinyUI (
              tabPanel("Section Visualizations",
                       sidebarLayout(
                         sidebarPanel(
-                          selectInput("year.viz", label = h3("Select Year"), choices = as.list(seq(1852, 2017, by = 1)), selected = 2000),
+                          selectInput("year.viz", label = h3("Select Year"), choices = as.list(seq(1852, 2017, by = 1)), selected = 2017),
                           selectInput("month.viz", label = h3("Select Month"), 
                                       choices = list("January" = 1, "February" = 2, "March" = 3, "April" = 4, "May" = 5,
                                                      "June" = 6, "July" = 7, "August" = 8, "September" = 9, "October" = 10,
@@ -59,7 +59,7 @@ shinyUI (
              tabPanel("Section Popularity Comparision",
                       sidebarLayout(
                         sidebarPanel(
-                          selectInput("year.pop", label = h3("Select Year"), choices = as.list(seq(1852, 2017, by = 1)), selected = 2000),
+                          selectInput("year.pop", label = h3("Select Year"), choices = as.list(seq(1852, 2017, by = 1)), selected = 2017),
                           selectInput("month.pop", label = h3("Select Month"), 
                                       choices = list("January" = 1, "February" = 2, "March" = 3, "April" = 4, "May" = 5,
                                                      "June" = 6, "July" = 7, "August" = 8, "September" = 9, "October" = 10,
@@ -81,7 +81,7 @@ shinyUI (
              tabPanel("Popular Topics",
                       sidebarLayout(
                         sidebarPanel(
-                          selectInput("year.top", label = h3("Select Year"), choices = as.list(seq(1852, 2017, by = 1)), selected = 2000),
+                          selectInput("year.top", label = h3("Select Year"), choices = as.list(seq(1852, 2017, by = 1)), selected = 2017),
                           selectInput("month.top", label = h3("Select Month"), 
                                       choices = list("January" = 1, "February" = 2, "March" = 3, "April" = 4, "May" = 5,
                                                      "June" = 6, "July" = 7, "August" = 8, "September" = 9, "October" = 10,
