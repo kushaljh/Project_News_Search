@@ -8,20 +8,29 @@ library("tidyr")
 library("ggplot2")
 library("plotly")
 
+#shiny server for the shiny app
 shinyServer(
   function(input, output) {
+   
+    #Uri paramters. 
     base.uri.1 <- "http://api.nytimes.com/svc/archive/v1/"
     base.uri.2 <- ".json?api-key="
     api.key <- "3d4af681d88646f5afb0b40f2a1e510b"
     
+    
     input.article <- reactive({
+      #reactive for input from article search tab. 
+      
       year.article <- input$year.article
       month.article <- input$month.article
       day.article <- input$day.article
       return(c(year.article, month.article, day.article))
     })
     
+     
     input.viz <- reactive({
+      #reactive for input from the section visualization tab.
+      
       year.viz <- input$year.viz
       month.viz <- input$month.viz
       day.viz <- input$day.viz
@@ -29,7 +38,10 @@ shinyServer(
       return(c(year.viz, month.viz, day.viz, section.viz))
     })
     
+    
     data.viz <- reactive({
+      #Reactive for the data for section visualization. 
+      
       parameters <- input.viz()
       news.data <- get.uri.data(parameters[1], parameters[2])
       news.data.response <- news.data$response
@@ -47,7 +59,10 @@ shinyServer(
       return(news.data.table)
     })
     
+    
     input.pop <- reactive({
+      #Reactive for input for section popularity. 
+      
       year.pop <- input$year.pop
       month.pop<- input$month.pop
       section1.pop <- input$section1.pop
@@ -55,21 +70,29 @@ shinyServer(
       return(c(year.pop, month.pop, section1.pop, section2.pop))
     })
     
-    # Returns the input month and the input year for the 'Popular Topics' visualisation
+    
     input.top <- reactive({
+      # Returns the input month and the input year for the 'Popular Topics' visualisation.
+      
       year.top <- input$year.top
       month.top<- input$month.top
       return(c(year.top, month.top))
     })
     
+    
     get.uri.data <- function(year, month) {
+      #Function to get uri data. 
+      
       uri <- paste0(base.uri.1, year, "/" ,month, base.uri.2, api.key)   
       data <- fromJSON(content(GET(uri), "text"))
       print(uri)
       return(data)
     }
     
+     
     get.news.data <- function(pass.year,pass.month) {
+      #Funtion to get the aticle dataframe.
+      #Takes in year and month as parameters. 
       
       news.data <- get.uri.data(pass.year, pass.month)
       news.data.response <- news.data$response
@@ -85,10 +108,11 @@ shinyServer(
       news.data.table$Day <- str_sub(news.data.table$`Publication Date`, 9, 10)
       return(news.data.table)
     }
-      # Function to get the summary of top 10 news values from all the articles 
-      # published in the input month and year
-      get.values.data <- function() {
       
+      get.values.data <- function() {
+        # Function to get the summary of top 10 news values from all the articles 
+        # published in the input month and year
+        
       parameters <- input.top()
       data <- as.data.frame(get.uri.data(parameters[1], parameters[2]))
       news.data.table <-  data %>% 
@@ -119,7 +143,9 @@ shinyServer(
       return (values)
     }
     
+    
     output$table <- renderDataTable({
+      #Render function to output data table to the app.
       
       parameters <- input.article()
       table.final <- get.news.data(parameters[1], parameters[2])
@@ -130,6 +156,7 @@ shinyServer(
     })
     
     output$plot1 <- renderPlotly({
+      #Render function to output section trend according to month to the app.
       
       data.plot <- data.viz()
       data.plot <- group_by(data.plot, Section)
@@ -137,6 +164,7 @@ shinyServer(
                               Count = n()) %>% 
         arrange(-Count)
       
+      #Making the bar plot interactive.
       plot <- ggplot(data = data.plot) +
         geom_bar(mapping = aes(x = Section), fill = rainbow(n = length(data.plot2$Count)))+
         labs(title = "Section Trend, Monthly Basis",
@@ -150,12 +178,14 @@ shinyServer(
           panel.grid.minor = element_blank(), 
           panel.grid.major = element_blank())
       
-      plot <- ggplotly(plot) %>% 
+      #Making the bar plot interactive. 
+      plot.1 <- ggplotly(plot) %>% 
         layout(autosize = F, width = 900, height = 500)
-      plot
+      plot.1
     })
     
     output$plot2 <- renderPlotly({
+      #Render function to output section trend according to day to the app. 
       
       parameters <- input.viz()
       data.plot <- data.viz()
@@ -165,6 +195,7 @@ shinyServer(
                               Count = n()) %>% 
         arrange(-Count)
       
+      #Making the bar plot interactive.
       plot <- ggplot(data = data.plot) +
         geom_bar(mapping = aes(x = Section), fill = rainbow(n = length(data.plot2$Count))) +
         labs(title = "Section Trend, Daily Basis",
@@ -178,13 +209,15 @@ shinyServer(
           panel.grid.minor = element_blank(), 
           panel.grid.major = element_blank())
       
-      plot <- ggplotly(plot) %>% 
+      #Making the bas plot interactive. 
+      plot.2 <- ggplotly(plot) %>% 
         layout(autosize = F, width = 900, height = 500)
       
-      plot
+      plot.2
     })
     
     output$plot3 <- renderPlotly({
+      #Render function to output the top 10 sections according to day to the app. 
       
       parameters <- input.viz()
       data.plot <- data.viz()
@@ -194,6 +227,7 @@ shinyServer(
                               Count = n()) %>% 
         arrange(-Count)
       
+      #Making the pie plot. 
       top.10 <- data.plot2[1:10, ] %>% 
         plot_ly(labels = ~Section, values = ~Count) %>% 
         add_pie(hole = 0.5) %>% 
@@ -374,6 +408,7 @@ shinyServer(
       </h4>
       <h3 style=\"font-weight:normal;\">Developers: Manesh Jhawar, Kushal Jhunjhunwalla, Helly Shah, Alice Li</h3>
       <h3 style=\"font-weight:normal;\">Powered by : NYT Developers API</h3>
+      <a href = \"http://developer.nytimes.com/article_search_v2.json\"> Link to the API documentation. </a>
       "
     })
     
