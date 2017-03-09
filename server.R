@@ -55,6 +55,7 @@ shinyServer(
       return(c(year.pop, month.pop, section1.pop, section2.pop))
     })
     
+    # Returns the input month and the input year for the 'Popular Topics' visualisation
     input.top <- reactive({
       year.top <- input$year.top
       month.top<- input$month.top
@@ -84,14 +85,16 @@ shinyServer(
       news.data.table$Day <- str_sub(news.data.table$`Publication Date`, 9, 10)
       return(news.data.table)
     }
-    
-    get.values.data <- function() {
+      # Function to get the summary of top 10 news values from all the articles 
+      # published in the input month and year
+      get.values.data <- function() {
       
       parameters <- input.top()
       data <- as.data.frame(get.uri.data(parameters[1], parameters[2]))
       news.data.table <-  data %>% 
         select(response.docs.keywords)
       
+      # Function to return values 
       GetValues <- function(index) {
         keywords <- as.data.frame(news.data.table[[1]][index])
         return(keywords$value)
@@ -99,6 +102,7 @@ shinyServer(
       
       values <- GetValues(1)
       
+      # Stores all the values
       for (index in 2:nrow(news.data.table)) {
         values <- c(values, GetValues(index))
       }
@@ -108,6 +112,8 @@ shinyServer(
       values <- as.data.frame(table(values$Values))
       colnames(values) <- c("Values", "Frequency")
       
+      # Arranges the values according to their frequency of occurence in descending order 
+      # and returns the top 10 of those values
       values <- arrange(values, -Frequency)
       values <- values[1:10, ]
       return (values)
@@ -272,11 +278,16 @@ shinyServer(
                autosize = F, width = 900, height = 500)
     })
     
+    # Render function to visualise the top 10 popular topics for an input month and year
     output$plot.values <- renderPlotly ({
       values <- get.values.data()
+      
+      # Factorises the values and frequencies so as to enable relative sizing
+      # while plotting 
       JitCoOr <- jitter(as.numeric(factor(values$Values)))
       JitCoOr2 <- jitter(as.numeric(factor(values$Frequency)))
       
+      # Creates and stores a scatter plot 
       plot <- ggplot(data, aes(x = Frequency, y = Values)) +
         geom_point(data = values, aes(x = JitCoOr2, y = JitCoOr, size = Frequency, color = Values), alpha = .5) +
         scale_size(range = c(5, 20)) +
@@ -286,6 +297,7 @@ shinyServer(
         labs(title = "Top 10 most-discussed about topics in New York Times", x = "Distribution according to recurrence",
              y = "Topics of Interest", color = "", size = "")
       
+      # Plots the scatter plot on a graph and customising its layout 
       ggplotly(plot) %>% 
         layout(plot, showlegend = FALSE, hovermode = FALSE,
                autosize = F, width = 900, height = 500)
