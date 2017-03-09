@@ -16,7 +16,8 @@ table {
 }
 
 h3 {
-  font-family: "Matura MT Script Capitals";
+  font-family: "Times New Roman";
+  font-weight: bold;
 }
 
 .well:hover {
