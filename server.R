@@ -297,7 +297,7 @@ shinyServer(
         labs(title = "Top 10 most-discussed about topics in New York Times", x = "Distribution according to recurrence",
              y = "Topics of Interest", color = "", size = "")
       
-      # Plots the scatter plot on a graph and customising its layout 
+      # Plots the scatter plot on a graph and customises its layout 
       ggplotly(plot) %>% 
         layout(plot, showlegend = FALSE, hovermode = FALSE,
                autosize = F, width = 900, height = 500)
