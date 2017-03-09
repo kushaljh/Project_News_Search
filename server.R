@@ -201,17 +201,23 @@ shinyServer(
     })
     
     output$plot.trend <- renderPlotly({
+      # Render function to plot the popularity of a section over a month
+      
+      # Storing the different parameters to be used in the function
       parameters <- input.viz()
+      
+      # Storing the data required for the plot to a data frame
       plot.data <- data.viz() %>% 
         select(`Section`, `Day`) %>%
         filter(Section == parameters[4]) %>%
         group_by(Day) %>%
         summarize(`No of Articles` = n())
       
+      # Creating a scatter plot and storing it to a variable
       p <- ggplot(data = plot.data) +
         geom_point(mapping = aes(x = Day, y = `No of Articles`),
                    color = "blue",
-                   alpha=0.4, size = plot.data$`No of Articles`) + 
+                   alpha=0.4, size = 5) + 
         labs(x = "Day of Month", 
              y = "Number of Articles") +
         theme_minimal() +
@@ -219,15 +225,24 @@ shinyServer(
           axis.ticks = element_blank(),
           panel.grid.minor = element_blank(), 
           panel.grid.major = element_blank())
+      
+      # Making the graph interactive
       p <- ggplotly(p) %>% 
         layout(autosize = F, width = 900, height = 500)
+      
+      # Plotting the graph
       p
     })
     
     output$plot.trendline <- renderPlotly({
+      # Render function to render comparison chart of sections selected as input
+      
+      # Storing the different parameters to be used in the function
       parameters <- input.pop()
       
       GetData <- function(index) {
+        # Function to filter data and select the column of interest 
+        # (column corresponding to the input index)
         plot.data <- get.news.data(parameters[1], parameters[2]) %>%
           select(`Section`, `Day`) %>%
           filter(Section == parameters[index]) %>%
@@ -237,12 +252,17 @@ shinyServer(
         return(plot.data)
       }
       
+      # Storing data of input sections in variables
       plot.data.1 <- GetData(3)
       plot.data.2 <- GetData(4)
+      
+      # Storing the data for the different sections to one data frame.
       plot.final <- full_join(plot.data.1, plot.data.2)
       
+      # Storing the names of the sections selected
       traces <- parameters[3:4]
       
+      # Plotting an interactive comparison line graph of the sections selected
       plot_ly(plot.final, x = ~plot.final[[1]], y = ~plot.final[[2]],
               type = 'scatter', mode = 'lines', name = traces[1]) %>% 
         add_trace(x = ~plot.final[[1]], y = ~plot.final[[3]], name = traces[2]) %>% 

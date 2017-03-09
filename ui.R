@@ -4,8 +4,7 @@ library("DT")
 shinyUI (
   navbarPage("NewSearch",
              theme = "bootstrap.css",
-             tabPanel("About" 
-             ),
+             tabPanel("About"),
              tabPanel("Article Search",
                       sidebarLayout(
                         sidebarPanel(
@@ -33,9 +32,10 @@ shinyUI (
                                                      "June" = 6, "July" = 7, "August" = 8, "September" = 9, "October" = 10,
                                                      "November" = 11, "December" = 12), selected = 1),
                           selectInput("day.viz", label = h3("Select Day"), choices = sprintf("%02d", c(seq(01,31, by = 1))), selected = 1),
-                          selectInput("section.viz", label = h3("Section"), choices = as.list(c("World", "U.S.", "Politics", "Business", "Opinion",
-                                                                                                          "Tech", "Science", "Health", "Sports", "Arts",
-                                                                                                          "Style", "Food", "Travel")), selected = "World")
+                          selectInput("section.viz", label = h3("Section"), 
+                                      choices = as.list(c("World", "U.S.", "Politics", "Business", "Opinion",
+                                                          "Tech", "Science", "Health", "Sports", "Arts",
+                                                          "Style", "Food", "Travel")), selected = "World")
                         ),
                         
                         mainPanel(
@@ -49,7 +49,7 @@ shinyUI (
                             tabPanel("Top 10 Section Daily Analysis",
                                      br(),
                                      plotlyOutput("plot3")),
-                            tabPanel("Section Popularity : Bubbles",
+                            tabPanel("Section Popularity",
                                      br(),
                                      plotlyOutput("plot.trend")))
                           
@@ -64,12 +64,14 @@ shinyUI (
                                       choices = list("January" = 1, "February" = 2, "March" = 3, "April" = 4, "May" = 5,
                                                      "June" = 6, "July" = 7, "August" = 8, "September" = 9, "October" = 10,
                                                      "November" = 11, "December" = 12), selected = 1),
-                          selectInput("section1.pop", label = h3("Select Section 1"), choices = as.list(c("World", "U.S.", "Politics", "Business", "Opinion",
-                                                                                                      "Tech", "Science", "Health", "Sports", "Arts",
-                                                                                                      "Style", "Food", "Travel")), selected = "World"),
-                          selectInput("section2.pop", label = h3("Select Section 2"), choices = as.list(c("World", "U.S.", "Politics", "Business", "Opinion",
-                                                                                                      "Tech", "Science", "Health", "Sports", "Arts",
-                                                                                                      "Style", "Food", "Travel")), selected = "U.S.")
+                          selectInput("section1.pop", label = h3("Select Section 1"), 
+                                      choices = as.list(c("World", "U.S.", "Politics", "Business", "Opinion",
+                                                          "Tech", "Science", "Health", "Sports", "Arts",
+                                                          "Style", "Food", "Travel")), selected = "World"),
+                          selectInput("section2.pop", label = h3("Select Section 2"), 
+                                      choices = as.list(c("World", "U.S.", "Politics", "Business", "Opinion",
+                                                          "Tech", "Science", "Health", "Sports", "Arts",
+                                                          "Style", "Food", "Travel")), selected = "U.S.")
                         ),
                         mainPanel(
                           h3("Section Popularity Comparision: Line"),
