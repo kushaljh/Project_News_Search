@@ -1,3 +1,4 @@
+# loading libraries
 library("shiny")
 library("httr")
 library("jsonlite")
@@ -85,7 +86,6 @@ shinyServer(
       
       uri <- paste0(base.uri.1, year, "/" ,month, base.uri.2, api.key)   
       data <- fromJSON(content(GET(uri), "text"))
-      print(uri)
       return(data)
     }
     

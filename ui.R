@@ -1,6 +1,8 @@
+# loading libraries
 library("shiny")
 library("plotly")
 library("DT")
+
 #Shiny UI for the app. 
 shinyUI (
   #NavBarPage function for the ui layout.
