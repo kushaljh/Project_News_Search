@@ -122,7 +122,6 @@ shinyServer(
     output$table <- renderDataTable({
       
       parameters <- input.article()
-      print(parameters)
       table.final <- get.news.data(parameters[1], parameters[2])
       table.final <- filter(table.final, table.final$Day == parameters[3]) %>% select(-`Day`)
       table.final <- datatable(table.final, escape = FALSE, class = "hover")
@@ -302,5 +301,139 @@ shinyServer(
         layout(plot, showlegend = FALSE, hovermode = FALSE,
                autosize = F, width = 900, height = 500)
     })
+    
+    output$textInfo <- renderText({
+      
+      "<h1>Introduction</h1>
+      <h4>
+      <p>Nowadays, when we are always looking forward to something new, always looking for new 
+        technology, we might want to rest a minute and look back to what we have been through. 
+        Many of the times, ideas are inspired by an incident from the past. We decided that it 
+        will be fascinating if we could build a web app for people to search back in time, a 
+        time that is special or of interest to them. With this app, an individual will be able to 
+        know a day back in time when he or she was not even born, or she could revisit a day that 
+        means a lot to her.
+      </p>
+      <p>
+        The dataset we used is the New York Times Archive API. NYT Archive API is a great data 
+        source because New York Times itself covers news and articles from worldwide, and is a 
+        rather believable source. With NYT data, we will be able to cover a wide range of events 
+        or incidents around the world on that day. NYT Archive API is very neatly organized, and 
+        contains enough information for our web apps, accordingly, it contains the dates that an 
+        article was posted. NYT API is categorized into sections like movies, books, top searched 
+        etc. We used the Archive API that provides lists of NYT articles by a month and goes back 
+        all the way to 1851. The archive API is similar to the article search API where we can 
+        simply pass the year and month we want, and the API will return a JSON object with 
+        articles of that month.
+      </p>
+      <p>
+        In order to access this API, we signed up for an API key and acknowledged that it is 
+        limited to 2000 requests per day. Though there is a limitation to access to this data, 
+        it will be enough for our current use and web building.
+      </p>
+      <p>
+        From the API, the columns we extracted from the dataset were: snippet, main headline, 
+        section, keywords, as well as the URL source. On our web page, we have five different 
+        tabs that take in different data inputs. The first tab is an About page that explains 
+        our web page. The next tab is an article search where the user will be able to select 
+        articles by date. A result will show indicating the publication date, headline, and 
+        section. By clicking on the headline of each result, a new page will open displaying 
+        the full article. Users will be about to change how many entries they want to see on 
+        this page, and there is also a search bar for interest searches.\"
+      </p>
+      <p>
+        The second tab shows the Section Visualization. This part includes four visualizations 
+        that are organized by Monty, Day, Top 10, and Popularity. Visualizations use colors to 
+        indicate different sections and displayed using hover-interactive bar plot, pie plot, 
+        and dot plot.
+      </p>
+      <p>
+        The third tab indicates section comparison where users will be able to choose two 
+        sections they want to compare. Our comparison visualization is indicated by a line, 
+        which clear show the comparing trend of the two sections. Each line represents the 
+        number of articles posted according to the day of the month. The line graph is also 
+        hovered interactive, showing major points and line labels.
+      </p>
+      <p>
+        The last tab gives a dot visualization on ten of the most discussed topics of the 
+        month of interest. Users will be able to choose a month from the sidebar and visualize 
+        the ten most discussed topics of that month. The popularity of each topic will be 
+        indicated by the size of the dot, the bigger the dot, the more popular the topic.
+      </p>
+      <p>
+        Our goal for this project is not just building a good looking app, we want our app 
+        to be as useful to the society as possible. With our app, people will be able to learn 
+        from the past, revisits and remember memorable moments from their lives. We are currently 
+        in a world with lots of issues, people might feel overwhelmed, but in fact, it has always 
+        been like this. Let's look back and see how things were resolved. We have made great 
+        improvements till this point today, let's have more faith going towards tomorrow.
+      </p>
+      <p>
+        All the visualizations are dated from 1981 to the current date before the ection parameter was not build
+        by New York times before 1981. Also, data for years from 2006 - 2007 is broken, so it gives error.
+      </h4>
+      <h3 style=\"font-weight:normal;\">Developers: Manesh Jhawar, Kushal Jhunjhunwalla, Helly Shah, Alice Li</h3>
+      <h3 style=\"font-weight:normal;\">Powered by : NYT Developers API</h3>
+      "
+    })
+    
+    output$articleText <- renderText({
+     "<h4> 
+      This feature lets you search all the articles available for the given year, month and day in a tabular format.
+      <br>
+      The table consists of the exact data of publication of the article, the hedline and its section name.
+      <br>
+      On clicking the headline, it redirects the user to the NYT's article page.
+      </h4>"
+    })
+    
+    output$plot1Text <- renderText({
+     "<h4>
+      The following grapph shows the number of different sections for the given year and month in a bar graph format.
+      Differnet colors reflect different sections. Hover over the graph for mor e information.
+      </h4>"
+    })
+   
+     output$plot2Text <- renderText({
+      "<h4>
+      The following grapph shows the number of different sections for the given year, month and day in a bar graph format.
+      <br>
+      Differnet colors reflect different sections. Hover over the graph for mor e information.
+      </h4>"
+    })
+     
+     output$plot3Text <- renderText({
+       "<h4>
+       The following grapph shows the top 10 section on a particular given day in a pie cahrt format. 
+       <Br>
+       Different colors represent different sections. Hover over the graph for more information.
+       </h4>"
+     })
+     
+     output$plot4Text <- renderText({
+       "<h4>
+       The following graph shows the number of articles for a particluar section over the give month and year in a poimt graph format. 
+       <Br>
+       Hover over the graph for more information.
+       </h4>"
+     })
+     
+     output$plot5Text <- renderText({
+       "<h4>
+       The following graph compares the popularity of two section for a given month and year. 
+       <br>
+       It plots the number of articles for each section ove a line graph in different colors. Hover over the graph for inforamtion.
+       </h4>"
+     })
+     
+     output$plot6Text <- renderText({
+       "<h4>
+       The following graph computes the 10 most popular topics for the given year and month and plots them over a point graph. 
+       <br>
+       Different colors reflect differnt rpics and theirs sizes are proportional to their popularity to compare two topic's relative popularity.
+       </h4>"
+     })
+     
+    
   })
 
