@@ -1,8 +1,12 @@
+Project: NewSearch
+
 **Introduction**
 
-*Notes: since we are using a very big dataset, the web page may be running a little slow, please stay patient*
+*Note: since we are using a very big dataset, the web page may be running a little slow, please stay patient*
 
 Contributors: Manesh Jhawar, Kushal Jhunjhunwalla, Helly Shah, Alice Li
+
+API: http://developer.nytimes.com/article_search_v2.json
 
 Nowadays, when we are always looking forward to something new, always looking for new technology, we might want to rest a minute and look back to what we have been through. Many of the times, ideas are inspired by an incident from the past. We decided that it will be fascinating if we could build a web app for people to search back in time, a time that is special or of interest to them. With this app, an individual will be able to know a day back in time when he or she was not even born, or she could revisit a day that means a lot to her.
 
